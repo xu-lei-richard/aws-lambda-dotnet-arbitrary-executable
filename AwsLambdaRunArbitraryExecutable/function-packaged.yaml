@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AWS Lambda .net core C# Run Arbitrary Executable
+Outputs:
+  ImageStoreName:
+    Value:
+      Fn::GetAtt:
+      - ImageStore
+      - DomainName
+Resources:
+  ExecutionPolicy:
+    Properties:
+      PolicyDocument:
+        Statement:
+        - Action:
+          - logs:CreateLogGroup
+          - logs:CreateLogStream
+          - logs:PutLogEvents
+          Effect: Allow
+          Resource: '*'
+        - Action:
+          - s3:ListBucket
+          - s3:PutObject
+          Effect: Allow
+          Resource: '*'
+        Version: '2012-10-17'
+      PolicyName: ExecutionPolicy
+      Roles:
+      - Ref: ExecutionRole
+    Type: AWS::IAM::Policy
+  ExecutionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+        Version: '2012-10-17'
+    Type: AWS::IAM::Role
+  ImageStore:
+    Type: AWS::S3::Bucket
+  MyFunction:
+    Properties:
+      CodeUri: s3://aws-code-store/AwsLambdaRunArbitraryExecutable/b9ef4593f1c9759cbe3b3bcc98e44633
+      Environment:
+        Variables:
+          S3bucket:
+            Fn::GetAtt:
+            - ImageStore
+            - DomainName
+      Handler: AwsLambdaRunArbitraryExecutable::AwsLambdaRunArbitraryExecutable.Function::Capture
+      MemorySize: 128
+      Role:
+        Fn::GetAtt:
+        - ExecutionRole
+        - Arn
+      Runtime: dotnetcore1.0
+      Timeout: 10
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31

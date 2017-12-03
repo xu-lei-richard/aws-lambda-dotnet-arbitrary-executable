@@ -1,0 +1,2 @@
+# Declare Unix/Linux related files line ending with LF
+unix-* text eol=lf

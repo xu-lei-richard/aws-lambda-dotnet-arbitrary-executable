@@ -1,0 +1,2 @@
+cp /var/task/phantomjs /tmp/phantomjs
+chmod 755 /tmp/phantomjs
