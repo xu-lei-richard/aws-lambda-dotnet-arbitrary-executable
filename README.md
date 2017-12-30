@@ -71,9 +71,9 @@ phantomjs-1.9.8-linux-x86_64 is used. The underlying [Lambda Execution Environme
 ### Executable configuration
 AWS Lambda is based on Linux, and it is different world to Windows programs. Linux file mode is not applicable for Windows. When an axecutable is packaged on Windows machine and uploaded to AWS Lambda, it is just a plain file. AWS Lambda also has a read-only file system. The key of executable configuration is with the file [unix-setup-phantomjs](AwsLambdaRunArbitraryExecutable/unix-setup-phantomjs). It copies the executable to /tmp folder, and then change its file mode to make it executable.
 	
-Note 1: When the package is uploaded to AWS Lambda, it is stored under /var/task, which is stored in the Lambda Environment Variable LAMBDA_TASK_ROOT.
+**Note 1**: When the package is uploaded to AWS Lambda, it is stored under /var/task, which is stored in the Lambda Environment Variable LAMBDA_TASK_ROOT.
 	
-Note 2: The setup script unix-setup-phantomjs must be UNIX format. [.gitattributes](.gitattributes) helps to enforce that in a Windows environment.
+**Note 2**: The setup script unix-setup-phantomjs must be UNIX format. [.gitattributes](.gitattributes) helps to enforce that in a Windows environment.
 
 ### Included files for AWS Lambda Package
 The below files must set "Copy to Output Directory" to "Copy Always"
