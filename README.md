@@ -16,31 +16,31 @@ In the file [build.bat](AwsLambdaRunArbitraryExecutable/build.bat), update the e
 
 2. Run the below batch command under the folder `AwsLambdaRunArbitraryExecutable`. Note: Update its S3 bucket as described above.
 
-```markdown
+```
 build.bat
 ```
-Its output is [here](images/build-bat-output.png).
+  Its output is [here](images/build-bat-output.png).
 
 3. Run the below batch command under the folder `AwsLambdaRunArbitraryExecutable` to create the Lambda function through CloudFormation.
 
-```markdown
+```
 deploy.bat
 ```
-Its output is [here](images/deploy-bat-output.png).
+  Its output is [here](images/deploy-bat-output.png).
 
 4. Enter into AWS Console, and the newly created Lambda function should be seen. Test with the below Test Event:
 
-```markdown
+```
 {
   "target": "https://dmitrybaranovskiy.github.io/raphael/polar-clock.html",
   "filename": "clock.jpeg"
 }
 ```
-Its output is [here](images/lambda-execution-output.png).
+  Its output is [here](images/lambda-execution-output.png).
 
 5. In the above CloudFormation stack creation, a S3 bucket is created to store the created image file name. Locate the S3 bucket name in the stack's outputs. In that S3 bucket, the file clock.jpeg should present.
 
-## Project brief
+## Key files
 
 [Function.cs](AwsLambdaRunArbitraryExecutable/Function.cs): Entry point of the Lambda function.
 
@@ -59,21 +59,21 @@ Its output is [here](images/lambda-execution-output.png).
 
 ## Key Points
 
-﻿- PhantomJS executable version
-    phantomjs-1.9.8-linux-x86_64 is used. The underlying [Lambda Execution Environment](https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html) is based on Amazon Linux AMI, and only 64-bit binaries are supported on AWS Lambda.
+### PhantomJS executable version: 
+phantomjs-1.9.8-linux-x86_64 is used. The underlying [Lambda Execution Environment](https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html) is based on Amazon Linux AMI, and only 64-bit binaries are supported on AWS Lambda.
 
-- Executable configuration
-    AWS Lambda is based on Linux, and it is different world to Windows programs. Linux file mode is not applicable for Windows. When an axecutable is packaged on Windows machine and uploaded to AWS Lambda, it is just a plain file. AWS Lambda also has a read-only file system. The key of executable configuration is with the file [unix-setup-phantomjs](AwsLambdaRunArbitraryExecutable/unix-setup-phantomjs). It copies the executable to /tmp folder, and then change its file mode to make it executable.
+### Executable configuration
+AWS Lambda is based on Linux, and it is different world to Windows programs. Linux file mode is not applicable for Windows. When an axecutable is packaged on Windows machine and uploaded to AWS Lambda, it is just a plain file. AWS Lambda also has a read-only file system. The key of executable configuration is with the file [unix-setup-phantomjs](AwsLambdaRunArbitraryExecutable/unix-setup-phantomjs). It copies the executable to /tmp folder, and then change its file mode to make it executable.
 	
-	Note 1: When the package is uploaded to AWS Lambda, it is stored under /var/task, which is stored in the Lambda Environment Variable LAMBDA_TASK_ROOT.
+Note 1: When the package is uploaded to AWS Lambda, it is stored under /var/task, which is stored in the Lambda Environment Variable LAMBDA_TASK_ROOT.
 	
-	Note 2: The setup script unix-setup-phantomjs must be UNIX format. [.gitattributes](.gitattributes) helps to enforce that in a Windows environment.
+Note 2: The setup script unix-setup-phantomjs must be UNIX format. [.gitattributes](.gitattributes) helps to enforce that in a Windows environment.
 
-- Included files for AWS Lambda Package
-	The below files must set "Copy to Output Directory" to "Copy Always"
-      - phantomjs
-      - rasterize.js
-      - unix-setup-phantomjs
+### Included files for AWS Lambda Package
+The below files must set "Copy to Output Directory" to "Copy Always"
+- phantomjs
+- rasterize.js
+- unix-setup-phantomjs
 
-- Excluded files for AWS Lambda Package	  
-	All *.bat / *.yaml files must set "Copy to Output Directory" to "Do not copy".
+### Excluded files for AWS Lambda Package
+All *.bat / *.yaml files must set "Copy to Output Directory" to "Do not copy".
