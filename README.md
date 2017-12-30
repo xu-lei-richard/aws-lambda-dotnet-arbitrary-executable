@@ -20,7 +20,8 @@ In the file [build.bat](AwsLambdaRunArbitraryExecutable/build.bat), update the e
 build.bat
 ```
 
-Its output is [here](images/build-bat-output.png).
+The outpus is:
+![output](images/build-bat-output.png)
 
 3. Run the below batch command under the folder `AwsLambdaRunArbitraryExecutable` to create the Lambda function through CloudFormation.
 
@@ -28,7 +29,8 @@ Its output is [here](images/build-bat-output.png).
 deploy.bat
 ```
 
-Its output is [here](images/deploy-bat-output.png).
+The outpus is:
+![output](images/deploy-bat-output.png)
 
 4. Enter into AWS Console, and the newly created Lambda function should be seen. Test with the below Test Event:
 
@@ -39,7 +41,8 @@ Its output is [here](images/deploy-bat-output.png).
 }
 ```
 
-Its output is [here](images/lambda-execution-output.png).
+The outpus is:
+![output](images/lambda-execution-output.png)
 
 5. In the above CloudFormation stack creation, a S3 bucket is created to store the created image file name. Locate the S3 bucket name in the stack's outputs. In that S3 bucket, the file clock.jpeg should present.
 
