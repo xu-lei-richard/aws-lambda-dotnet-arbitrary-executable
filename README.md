@@ -2,15 +2,15 @@
 
 AWS Lambda allows running arbitrary executables. This [blog](https://aws.amazon.com/blogs/compute/running-executables-in-aws-lambda/) shows how to do it with Node.js. We needed to do it in .NET Core, and there is no clear instruction on how to implement it. This project shows how to run arbitrary executables with .NET Core.
 
-## Update the S3 bucket
+## Update the S3 Bucket
 
 In the file [build.bat](AwsLambdaRunArbitraryExecutable/build.bat), update the existing bucket name `aws-code-store` to your own S3 bucket.
 
-## Project goal
+## Project Goal
 
 [PhantomJS](http://phantomjs.org/) is a popular tool to [capture screen](http://phantomjs.org/screen-capture.html). It is an executable. This project creates an AWS Lambda function with .NET Core to execute PhantomJS to capture a web page, and then saves the image to a S3 bucket.
 
-## Run the project
+## Run the Project
 
 1. Assume your AWS credentials have been configured.
 
@@ -19,14 +19,16 @@ In the file [build.bat](AwsLambdaRunArbitraryExecutable/build.bat), update the e
 ```
 build.bat
 ```
-  Its output is [here](images/build-bat-output.png).
+
+Its output is [here](images/build-bat-output.png).
 
 3. Run the below batch command under the folder `AwsLambdaRunArbitraryExecutable` to create the Lambda function through CloudFormation.
 
 ```
 deploy.bat
 ```
-  Its output is [here](images/deploy-bat-output.png).
+
+Its output is [here](images/deploy-bat-output.png).
 
 4. Enter into AWS Console, and the newly created Lambda function should be seen. Test with the below Test Event:
 
@@ -36,11 +38,12 @@ deploy.bat
   "filename": "clock.jpeg"
 }
 ```
-  Its output is [here](images/lambda-execution-output.png).
+
+Its output is [here](images/lambda-execution-output.png).
 
 5. In the above CloudFormation stack creation, a S3 bucket is created to store the created image file name. Locate the S3 bucket name in the stack's outputs. In that S3 bucket, the file clock.jpeg should present.
 
-## Key files
+## Key Files
 
 [Function.cs](AwsLambdaRunArbitraryExecutable/Function.cs): Entry point of the Lambda function.
 

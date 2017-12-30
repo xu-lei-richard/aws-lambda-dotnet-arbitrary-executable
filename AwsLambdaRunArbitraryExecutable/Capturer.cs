@@ -25,6 +25,8 @@ namespace AwsLambdaRunArbitraryExecutable
             _s3Client = s3Client;
             _s3Bucket = s3bucket;
 
+            _logger.LogInfo($"Target bucket {_s3Bucket}");
+
             capturejsPath = new FileInfo("rasterize.js").FullName;
 
             // setup PhantomJS
@@ -46,6 +48,9 @@ namespace AwsLambdaRunArbitraryExecutable
         {
             try
             {
+                _logger.LogInfo($"target: {target}");
+                _logger.LogInfo($"filename: {filename}");
+
                 // check input target
                 if (string.IsNullOrWhiteSpace(target)) return;
 
@@ -65,6 +70,8 @@ namespace AwsLambdaRunArbitraryExecutable
                         $"PhantomJS failed to generate. ExitCode {exitCode}. Output: {output}. Err: {err}");
                     return;
                 }
+
+                _logger.LogInfo($"Generated image: {fileInfo.FullName}");
 
                 // store in S3 bucket
                 await _s3Client.UploadObjectFromFilePathAsync(_s3Bucket, filename, fileInfo.FullName, null);

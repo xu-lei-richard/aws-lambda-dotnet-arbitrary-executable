@@ -1,9 +1,28 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
-Description: AWS Lambda .net core C# Run Arbitrary Executable
+Description: AWS Lambda .NET Core C# Run Arbitrary Executable
 
 Resources:
 
+  # S3 bucket to store image
+  ImageStore:
+    Type: AWS::S3::Bucket
+
+  # Lambda function
+  CaptureFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: AwsLambdaRunArbitraryExecutable::AwsLambdaRunArbitraryExecutable.Function::Capture
+      Runtime: dotnetcore1.0
+      CodeUri: publish\AwsLambdaRunArbitraryExecutable.zip
+      MemorySize: 256
+      Timeout: 30
+      Role: !GetAtt ExecutionRole.Arn
+      Environment:
+        Variables:
+          S3bucket: !Select [ 0, !Split [ ".", !GetAtt ImageStore.DomainName ] ]
+
+  # Lambda execution role
   ExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -18,6 +37,7 @@ Resources:
             Action: 
               - "sts:AssumeRole"
 
+  # Lambda execution policy
   ExecutionPolicy:
     Type: AWS::IAM::Policy
     Properties: 
@@ -41,22 +61,8 @@ Resources:
       Roles:
         - Ref: ExecutionRole
 
-  ImageStore:
-    Type: AWS::S3::Bucket
-
-  MyFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: AwsLambdaRunArbitraryExecutable::AwsLambdaRunArbitraryExecutable.Function::Capture
-      Runtime: dotnetcore1.0
-      CodeUri: publish\AwsLambdaRunArbitraryExecutable.zip
-      MemorySize: 128
-      Timeout: 30
-      Role: !GetAtt ExecutionRole.Arn
-      Environment:
-        Variables:
-          S3bucket: !GetAtt ImageStore.DomainName
 
 Outputs:
-  ImageStoreName:
-    Value: !GetAtt ImageStore.DomainName
+  ImageStoreBucketName:
+    Value: !Select [ 0, !Split [ ".", !GetAtt ImageStore.DomainName ] ]
+      
