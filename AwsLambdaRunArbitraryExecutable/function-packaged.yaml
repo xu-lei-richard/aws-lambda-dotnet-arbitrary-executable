@@ -43,7 +43,7 @@ Resources:
     Type: AWS::S3::Bucket
   MyFunction:
     Properties:
-      CodeUri: s3://aws-code-store/AwsLambdaRunArbitraryExecutable/b9ef4593f1c9759cbe3b3bcc98e44633
+      CodeUri: s3://aws-code-store/AwsLambdaRunArbitraryExecutable/3396e77575b45ac69cede8a4ebedccf0
       Environment:
         Variables:
           S3bucket:
@@ -57,6 +57,6 @@ Resources:
         - ExecutionRole
         - Arn
       Runtime: dotnetcore1.0
-      Timeout: 10
+      Timeout: 30
     Type: AWS::Serverless::Function
 Transform: AWS::Serverless-2016-10-31

@@ -6,9 +6,14 @@ using Amazon.S3;
 
 namespace AwsLambdaRunArbitraryExecutable
 {
+    /// <summary>
+    ///     Screen Capturer
+    /// </summary>
     public class Capturer
     {
+        // Executable full path
         private const string phantomjsPath = "/tmp/phantomjs";
+
         private readonly ILogger _logger;
         private readonly string _s3Bucket;
         private readonly IAmazonS3 _s3Client;
@@ -46,7 +51,8 @@ namespace AwsLambdaRunArbitraryExecutable
 
                 if (string.IsNullOrWhiteSpace(filename)) filename = Guid.NewGuid() + ".jpeg";
 
-                var filePath = "/tmp/" + filename; // Lambda has a read-only file system, but can write to tmp folder
+                // Lambda has a read-only file system, but can write to tmp folder. Store generated image at here.
+                var filePath = "/tmp/" + filename;
 
                 RunProcess(phantomjsPath, $"{capturejsPath} {target} {filePath}",
                     out var exitCode, out var output, out var err);
@@ -60,7 +66,7 @@ namespace AwsLambdaRunArbitraryExecutable
                     return;
                 }
 
-                // store in s3
+                // store in S3 bucket
                 await _s3Client.UploadObjectFromFilePathAsync(_s3Bucket, filename, fileInfo.FullName, null);
 
                 // remove it to save space, in case of many times of container reuse.
@@ -72,6 +78,14 @@ namespace AwsLambdaRunArbitraryExecutable
             }
         }
 
+        /// <summary>
+        ///     Helper to run a process
+        /// </summary>
+        /// <param name="processFileName"></param>
+        /// <param name="arguments"></param>
+        /// <param name="exitCode"></param>
+        /// <param name="output"></param>
+        /// <param name="err"></param>
         private static void RunProcess(string processFileName, string arguments,
             out int exitCode, out string output, out string err)
         {
